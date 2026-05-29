@@ -7,17 +7,17 @@ USE coffeeshop_db;
 -- =========================================================
 
 -- Q1) List all products (show product name and price), sorted by price descending.
-
+select name, price from products order by price desc;
 -- Q2) Show all customers who live in the city of 'Lihue'.
-
+select * from customers where city = 'Lihue';
 -- Q3) Return the first 5 orders by earliest order_datetime (order_id, order_datetime).
-
+select * from orders where order_id<=5 order by order_datetime;
 -- Q4) Find all products with the word 'Latte' in the name.
-
+select * from products where name = 'Latte';
 -- Q5) Show distinct payment methods used in the dataset.
-
+select payment_method from orders;
 -- Q6) For each store, list its name and city/state (one row per store).
-
+select * from stores;
 -- Q7) From orders, show order_id, status, and a computed column total_items
 --     that counts how many items are in each order.
 
