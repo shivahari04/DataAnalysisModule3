@@ -12,7 +12,8 @@ FROM order_items group by order_id order by order_id;
 -- Q2) Compute total items per order for PAID orders only.
 --     Return (order_id, total_items). Hint: order_id IN (SELECT ... FROM orders WHERE status='paid').
 -- SELECT order_id,status from orders where status = 'paid';
-select order_id, sum(order_id) as total_items from order_items where order_id IN 
+
+select order_id, sum(quantity) as total_items from order_items where order_id IN 
 	(SELECT order_id from orders where status='paid') group by order_id;
 
 -- Q3) How many orders were placed per day (all statuses)?
@@ -49,19 +50,28 @@ from orders where status ='paid' group by store_id;
 
 -- Q8) Which day of week has the highest number of PAID orders?
 --     Return (day_name, orders_count). Hint: DAYNAME(order_datetime). Return ties if any.
-
+select dayname(order_datetime) as day_name, count(order_id) as orders_count
+from orders where status = 'paid' group by day_name having count(order_id) = (select MAX(daily_counts)
+from (select count(order_id) as daily_counts from orders where status = 'paid'group by DAYNAME(order_datetime)) as highest_count
+) order by orders_count desc;
 
 -- Q9) Show the calendar days whose total orders (any status) exceed 3.
 --     Use HAVING. Return (order_date, orders_count).
+select date(order_datetime) as order_date, count(order_id) as orders_count 
+from orders group by order_date having orders_count>3 order by orders_count desc;
 
 -- Q10) Per store, list payment_method and the number of PAID orders.
 --      Return (store_id, payment_method, paid_orders_count).
-
+select store_id, payment_method, count(order_id) as paid_orders_count
+from orders where status ='paid' group by store_id, payment_method order by paid_orders_count desc; 
 
 -- Q11) Among PAID orders, what percent used 'app' as the payment_method?
 --      Return a single row with pct_app_paid_orders (0–100).
+select round((select count(order_id)from orders where status = 'paid' and payment_method = 'app') * 100.0
+/ (select count(order_id) from orders where status = 'paid'), 2) as pct_app_paid_orders;
 
 -- Q12) Busiest hour: for PAID orders, show (hour_of_day, orders_count) sorted desc.
-
+select hour(order_datetime) as hour_of_day, count(order_id) as orders_count 
+from orders where status = 'paid' group by hour_of_day order by orders_count desc; 
 
 -- ================

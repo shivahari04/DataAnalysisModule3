@@ -11,7 +11,7 @@ select name, price from products order by price desc;
 -- Q2) Show all customers who live in the city of 'Lihue'.
 select * from customers where city = 'Lihue';
 -- Q3) Return the first 5 orders by earliest order_datetime (order_id, order_datetime).
-select * from orders order by order_datetime limit 5;
+select order_id, order_datetime from orders order by order_datetime limit 5;
 -- Q4) Find all products with the word 'Latte' in the name.
 select * from products where name like '%Latte%';
 -- Q5) Show distinct payment methods used in the dataset.
@@ -28,4 +28,4 @@ select * from orders where date(order_datetime)='2025-09-04';
 SELECT price, name FROM products ORDER BY price desc LIMIT 3;
 -- Q10) Show customer full names as a single column 'customer_name'
 --      in the format "Last, First".
-select last_name, first_name, concat(last_name, ' ',first_name) as customer_name from customers;
+select concat(last_name, ' ',first_name) as customer_name from customers;
