@@ -13,7 +13,7 @@ FROM order_items group by order_id order by order_id;
 --     Return (order_id, total_items). Hint: order_id IN (SELECT ... FROM orders WHERE status='paid').
 -- SELECT order_id,status from orders where status = 'paid';
 
-select order_id, sum(quantity) as total_items from order_items where order_id IN 
+select order_id, sum(order_id) as total_items from order_items where order_id IN 
 	(SELECT order_id from orders where status='paid') group by order_id;
 
 -- Q3) How many orders were placed per day (all statuses)?
