@@ -33,14 +33,12 @@ USE coffeeshop_db;
     where status = 'paid'
     group by o.order_id, customer_name, store_name, o.order_datetime
     having order_total > 
-    ( 		select sum(oi2.quantity * p2.price) as store_order_total
+    ( 		select avg(oi2.quantity*p2.price) as store_order_total
 			from order_items oi2 join products p2 on oi2.product_id = p2.product_id
 			join orders o2 on oi2.order_id = o2.order_id
-            where o2.status = 'paid' and o2.store_id = o.store_id
-		) 	
-        order by store_name, order_total desc
-    ;
-
+            where o2.status = 'paid' and o2.store_id = s.store_id
+		) 	order by store_name, order_total desc; 
+       ;
 */
 -- =========================================================
 -- Q2) CTE: Daily revenue and 3-day rolling average (PAID only)
@@ -70,9 +68,7 @@ select
         avg(daily_revenue.revenue_day) 
         over(partition by daily_revenue.store_id
 		order by daily_revenue.order_date	
-        rows between 2 preceding and current row
-        ), 2
-        ) as rolling_3days_avg
+        rows between 2 preceding and current row), 2) as rolling_3days_avg
         from daily_revenue join stores s on s.store_id = daily_revenue.store_id
         order by store_name, order_date; 
         
